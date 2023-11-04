@@ -15,6 +15,8 @@ public class HTTPReqwest {
 	
 	boolean isHTTP = false;
 	
+	boolean isRFile = false;
+	
 	Logger log = Logger.getLogger(getClass());
 	
 	public HTTPReqwest(String mes) {
@@ -32,15 +34,16 @@ public class HTTPReqwest {
 		if(mSlice.length < 1)
 			return;
 		String[] headSlice = mSlice[0].split(" ");
-		if(headSlice.length < 1)
+		if(headSlice.length < 2)
 			return;
 		method = Method.getMethod(headSlice[0]);
 		path = headSlice[1];
+		isRFile = path.contains(".");
 		isHTTP = true;
 		String[] mmSlice;
 		for (int i = 1; i < mSlice.length; i++) {
 			mmSlice = mSlice[i].split(":");
-			if(mmSlice.length > 0)
+			if(mmSlice.length > 1)
 				parametrs.put(mmSlice[0], mmSlice[1]);
 		}
 		
@@ -56,6 +59,10 @@ public class HTTPReqwest {
 	
 	public Map<String, String> getParametrs() {
 		return parametrs;
+	}
+	
+	public boolean isRFile() {
+		return isRFile;
 	}
 	
 	public boolean isHTTP() {
