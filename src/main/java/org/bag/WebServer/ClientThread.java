@@ -4,11 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bag.WebServer.Reqwest.HTTPReqwest;
 import org.bag.WebServer.Response.HTTPResponse;
+import org.bag.WebServer.Response.IResponse;
+import org.bag.WebServer.Response.Response.FileSimpleResponse;
 import org.bag.WebServer.Storage.FileStorage;
 
 public class ClientThread extends Thread {
@@ -21,6 +23,8 @@ public class ClientThread extends Thread {
 	
 	final FileStorage storage = new FileStorage();
 	
+	Map<String, IResponse> paths;
+	
 	public String decoding() throws IOException {
 		String str = "";
 		log.debug("Start Decoding message");
@@ -31,7 +35,8 @@ public class ClientThread extends Thread {
 		return str;
 	}
 	
-	public ClientThread(Socket sock) {
+	public ClientThread(Socket sock, Map<String, IResponse> paths) {
+		this.paths = paths;
 		log.info("START SOCKET LISSEN: " + sock);
 		try {
 			bufIn = new BufferedInputStream(sock.getInputStream());
@@ -50,8 +55,12 @@ public class ClientThread extends Thread {
 			if(req.isHTTP()) {
 				if (req.isRFile())
 					new HTTPResponse().sendFileRespons(bufOut, storage.getFile(req.getPath()));
-				else
-					new HTTPResponse().getSimpelResponse(bufOut, "<h1> INDEX PAGE SIMPLE ANSWER </h1>\n");
+				else {
+					IResponse res  = paths.get(req.getPath().toLowerCase());
+//					res.sendResponse(bufOut);
+					paths.getOrDefault(req.getPath().toLowerCase(), new FileSimpleResponse("/error")).sendResponse(bufOut);
+				}
+//					new HTTPResponse().getSimpelResponse(bufOut, "<h1> INDEX PAGE SIMPLE ANSWER </h1>\n");
 			}
 			bufOut.flush();
 			bufIn.close();

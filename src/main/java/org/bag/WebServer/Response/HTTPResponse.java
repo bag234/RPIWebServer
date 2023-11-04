@@ -20,6 +20,8 @@ public class HTTPResponse {
 	
 	Logger log = Logger.getLogger(getClass());
 	
+	
+	
 	public HTTPResponse(StatusCode code, ContetTypes type) {
 		this.code = code;
 		this.type = type;
