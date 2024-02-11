@@ -4,8 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
-<body>
-    <h1>Main page</h1>
+<script >
+
+    var deb_str = "rel1:false\n"
+
+    async function updateBangles(){
+        // var splQ = deb_str.split("\n");
+        
+        var res = await fetch("/gpio");
+        var splQ = "";
+        console.log(res);
+        if (res.ok){
+            var Q = await res.text();
+            var splQ = Q.split("\n");
+            splQ.forEach(elm =>{
+                updateBangle(elm)
+            } );
+        }
+        else
+            console.log("Error /gpio: " + res.status); 
+    }
+
+    function updateBangle(node) {
+        var elm = document.getElementById(node.split(":")[0]);
+        if(node.split(":")[1] == "true"){
+            elm.className = "badge text-bg-success";
+            elm.innerText = "ON";
+        }
+        else{
+            elm.className = "badge text-bg-danger";
+            elm.innerText = "OFF";
+        }
+    }
+
+    function clickSwitch(name){
+        console.log("info:" + name);
+        fetch(name,{method:"post"});
+        updateBangles();
+    }
+</script>
+<body class="contener">
+    <div class="container">
+        <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+            <div class="col-lg-6 px-0">
+                <h1>Bag controler Reley</h1>
+                Use RPI and GPIO for controling relley model
+            </div> 
+        </div>
+        <div class=" container row row-cols-1 row-cols-md-2 g-4"">
+            <div class="card  mb-3" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">White Light table</h5>
+                  <p class="card-text">Status: <snap id="rel1" class="badge text-bg-success">ON</snap></p>
+                  <a href="#" onclick='{clickSwitch("/gpio/rel1")}' class="btn btn-primary">Swicth</a>
+                </div>
+            </div>
+            <div class="card  mb-3" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Color Light table</h5>
+                  <p class="card-text">Status: <snap id="rel2" class="badge text-bg-success">ON</snap></p>
+                  <a href="#" onclick='{clickSwitch("/gpio/rel2")}' class="btn btn-primary">Swicth</a>
+                </div>
+            </div>
+            <div class="card  mb-3" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Socket table</h5>
+                  <p class="card-text">Status: <snap id="rel3" class="badge text-bg-success">ON</snap></p>
+                  <a href="#" onclick='{clickSwitch("/gpio/rel3")}' class="btn btn-primary">Swicth</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

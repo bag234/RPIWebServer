@@ -17,6 +17,8 @@ public class HTTPReqwest {
 	
 	boolean isRFile = false;
 	
+	boolean isWS = false;
+	
 	Logger log = Logger.getLogger(getClass());
 	
 	public HTTPReqwest(String mes) {
@@ -30,7 +32,7 @@ public class HTTPReqwest {
 	}
 	
 	private void decode(String mes) {
-		String[] mSlice = mes.split("\n");
+		String[] mSlice = mes.split("\r\n");
 		if(mSlice.length < 1)
 			return;
 		String[] headSlice = mSlice[0].split(" ");
@@ -40,13 +42,22 @@ public class HTTPReqwest {
 		path = headSlice[1];
 		isRFile = path.contains(".");
 		isHTTP = true;
+			
 		String[] mmSlice;
 		for (int i = 1; i < mSlice.length; i++) {
-			mmSlice = mSlice[i].split(":");
+			mmSlice = mSlice[i].split(": ");
 			if(mmSlice.length > 1)
 				parametrs.put(mmSlice[0], mmSlice[1]);
 		}
-		
+		if(parametrs.getOrDefault("Upgrade", "None")
+				.toString().equals("websocket")) {
+			log.debug("Is WebSocket mess: " + path);
+			isWS = true;
+		}
+	}
+	
+	public boolean isWS() {
+		return isWS;
 	}
 	
 	public Method getMethod() {

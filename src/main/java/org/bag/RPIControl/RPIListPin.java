@@ -1,37 +1,41 @@
-package org.bag.WebServer.Response.Response;
+package org.bag.RPIControl;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.bag.WebServer.Reqwest.HTTPReqwest;
 import org.bag.WebServer.Response.HTTPResponse;
 import org.bag.WebServer.Response.IResponse;
-import org.bag.WebServer.Storage.FileStorage;
 
-public class FileSimpleResponse implements IResponse {
+public class RPIListPin implements IResponse {
 	
-	final FileStorage storage = new FileStorage();
+	PigFactory pig;
 	
-	File file;
-	
-	public FileSimpleResponse(String name) {
-		file = storage.getFile(name);
+	public RPIListPin(PigFactory pig) {
+		this.pig = pig;
 	}
 
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut) throws IOException {
-		new HTTPResponse().sendFileRespons(bufOut, file);		
+		// TODO Auto-generated method stub
+
 	}
-	
+
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res) throws IOException {
-		new HTTPResponse().sendFileRespons(bufOut, file);		
+		
 	}
 
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res, HTTPReqwest req) throws IOException {
-		new HTTPResponse().sendFileRespons(bufOut, file);
+		String mes = "";
+		for (Map.Entry<Integer, String> entry : RPIResponse.list.entrySet()) {
+			Integer pin = entry.getKey();
+			String name = entry.getValue();
+			mes += name + ":" +  pig.getSimplePinValue(pin) + "\n";
+		}
+		res.getSimpelResponse(bufOut, mes);
 	}
-	
+
 }

@@ -12,6 +12,7 @@ import org.bag.WebServer.Response.HTTPResponse;
 import org.bag.WebServer.Response.IResponse;
 import org.bag.WebServer.Response.Response.FileSimpleResponse;
 import org.bag.WebServer.Storage.FileStorage;
+import org.bag.WebServer.WebSocket.SimpleWebSocket;
 
 public class ClientThread extends Thread {
 
@@ -52,13 +53,28 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
 			HTTPReqwest req = new HTTPReqwest(decoding());
+			if(req.isWS()) {
+				SimpleWebSocket resWs = new SimpleWebSocket();
+				resWs.sendResponse(bufOut, new HTTPResponse(), req);
+				String str = "";
+				log.debug("Start Decoding message");
+//				bufOut.write(new String("ZIG HILE\r\n").getBytes());
+				while (true) {
+					if(bufIn.available() > 0) {
+						str+= (char) bufIn.read();
+						System.out.println(str);
+					}
+				}
+			}
+			else
 			if(req.isHTTP()) {
 				if (req.isRFile())
 					new HTTPResponse().sendFileRespons(bufOut, storage.getFile(req.getPath()));
 				else {
 					IResponse res  = paths.get(req.getPath().toLowerCase());
 //					res.sendResponse(bufOut);
-					paths.getOrDefault(req.getPath().toLowerCase(), new FileSimpleResponse("/error")).sendResponse(bufOut);
+					paths.getOrDefault(req.getPath().toLowerCase(), new FileSimpleResponse("/error"))
+						.sendResponse(bufOut, new HTTPResponse(), req);
 				}
 //					new HTTPResponse().getSimpelResponse(bufOut, "<h1> INDEX PAGE SIMPLE ANSWER </h1>\n");
 			}

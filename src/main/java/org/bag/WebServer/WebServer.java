@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.bag.RPIControl.PigFactory;
+import org.bag.RPIControl.RPIListPin;
+import org.bag.RPIControl.RPIResponse;
 import org.bag.WebServer.Response.IResponse;
 import org.bag.WebServer.Response.Response.FileSimpleResponse;
 
@@ -16,13 +19,20 @@ public class WebServer {
 	
 	int port;
 	
+//	PigFactory pig = new PigFactory();
+	
 	Map<String, IResponse> paths;
 	
 	public void initPath() {
+		
 		log.debug("Initialization paths");
 		paths.put("/", new FileSimpleResponse("/Index.html"));
 		paths.put("/index", new FileSimpleResponse("/Index.html"));
 		paths.put("/main", new FileSimpleResponse("/Index.html"));
+//		paths.put("/gpio", new RPIListPin(pig));
+//		paths.put("/gpio/rel1", new RPIResponse(14, "rel1", pig));
+//		paths.put("/gpio/rel2", new RPIResponse(15, "rel2", pig));
+//		paths.put("/gpio/rel3", new RPIResponse(18, "rel3", pig));
 	}
 	
 	public WebServer(int port) {
