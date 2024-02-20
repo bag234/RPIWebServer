@@ -12,6 +12,7 @@ import java.util.Base64;
 import org.apache.log4j.Logger;
 import org.bag.WebServer.Reqwest.HTTPReqwest;
 import org.bag.WebServer.Storage.FileStorage;
+import org.bag.WebServer.WebSocket.WSFrame;
 
 public class HTTPResponse {
 
@@ -88,8 +89,8 @@ public class HTTPResponse {
 		HTTPResponse res = new HTTPResponse(StatusCode.SWITCH, ContetTypes.HTML);
 		String wsScode = req.getParametrs().get("Sec-WebSocket-Key");
 		String mess = res.getAnswerWebSocket(wsScode);
-		bufOut.write(mess.getBytes(),0, mess.getBytes().length );
-
+		bufOut.write(mess.getBytes());
+		bufOut.flush();
 	}
 	
 }
