@@ -1,5 +1,6 @@
 package org.bag.WebServer.WebSocket;
 
+import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -82,6 +83,49 @@ public class WSFrame {
 		
 		return unMasked;
 	}
+	
+	public static WSFrame getPing() {
+		WSFrame frame = new WSFrame();
+		int[] arr = {100, 100, 100, 100, 100, 100};
+		frame.isFine = true;
+		frame.opCode = OpCODE.PING;
+		frame.size =  6;
+		frame.payLoad = arr;
+		
+		return frame;
+	}
+	
+	public byte[] getBytes() {
+		byte[] bs = new byte[6 + size];
+
+		
+		int b1 = 0;
+		int b2 = 0;
+		//firstByte
+		if (isFine)
+			b1 = 128;
+		if (RSV1)
+			b1 |= 64;
+		if (RSV2)
+			b1 |= 32;
+		if (RSV3)
+			b1 |= 16;
+		b1 |= opCode.getCount();
+		//Second Byte;
+		if (isMask)
+			b2 |= 128;
+		b2 |= size;
+		
+		bs[0] = (byte) b1;
+		bs[1] = (byte) b2;
+		for (int i = 0; i < Mask.length; i++) {
+			bs[2 + i] = (byte) Mask[i];
+		}
+		for (int i = 0; i < size; i++) {
+			bs[6 + i] = (byte) payLoad[i];
+		}
+		return bs;
+ 	}
 	
 	public WSFrame() {
 	}

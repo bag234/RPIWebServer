@@ -51,11 +51,11 @@ public class HTTPResponse {
 		String Sec = getCode(str);
 		return "HTTP/1.1 " + code.getMessage() +
 				"\r\n " + name + 
-				"\r\n Connection: Upgrade" + 
-				"\r\n Upgrade: websocket" + 
+				"\r\nUpgrade: websocket" + 
+				"\r\nConnection: upgrade" + 
 //				"\r\n WebSocket-Origin: http://localhost:9099" + 
 //				"\r\n WebSocket-Location: ws://localhost:9099/ws" + 
-				"\r\n Sec-WebSocket-Accept: " + Sec +
+				"\r\nSec-WebSocket-Accept: " + Sec +
 				"\r\n\r\n";
 	}
 	

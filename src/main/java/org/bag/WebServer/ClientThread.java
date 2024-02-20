@@ -13,6 +13,7 @@ import org.bag.WebServer.Response.IResponse;
 import org.bag.WebServer.Response.Response.FileSimpleResponse;
 import org.bag.WebServer.Storage.FileStorage;
 import org.bag.WebServer.WebSocket.SimpleWebSocket;
+import org.bag.WebServer.WebSocket.WSFrame;
 
 public class ClientThread extends Thread {
 
@@ -58,11 +59,12 @@ public class ClientThread extends Thread {
 				resWs.sendResponse(bufOut, new HTTPResponse(), req);
 				String str = "";
 				log.debug("Start Decoding message");
+				WSFrame frame = WSFrame.getPing();
+				// sending ping frame 
 //				bufOut.write(new String("ZIG HILE\r\n").getBytes());
 				while (true) {
-					if(bufIn.available() > 0) {
-						str+= (char) bufIn.read();
-						System.out.println(str);
+					while (bufIn.available() > 0) {
+						System.out.println( Integer.toHexString(bufIn.read()));  
 					}
 				}
 			}
