@@ -49,7 +49,7 @@ public class WebServer {
 			ServerSocket servSock = new ServerSocket(port);
 			while(servSock.isBound()) {
 				Socket sock = servSock.accept();
-				new Thread(new ClientThread(sock, paths, WSpaths)).run();
+				new Thread(new ClientThread(sock, paths, WSpaths)).start();
 			}
 		} catch (IOException e) {
 			log.fatal("FATAL ERROR");

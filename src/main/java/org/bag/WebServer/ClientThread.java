@@ -71,12 +71,10 @@ public class ClientThread extends Thread {
 					
 					WSFrame frame = new WSFrame();
 					byte[] buf;
-					int[] intBuf;
 					
 					while (true) {
 						 if (bufIn.available() > 0) {
 							buf = new byte[bufIn.available()];
-							intBuf = new int[bufIn.available()];
 							
 							bufIn.readNBytes(buf, 0, bufIn.available());
 												
