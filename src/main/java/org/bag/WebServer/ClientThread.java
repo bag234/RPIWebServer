@@ -4,6 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -57,14 +60,29 @@ public class ClientThread extends Thread {
 			if(req.isWS()) {
 				SimpleWebSocket resWs = new SimpleWebSocket();
 				resWs.sendResponse(bufOut, new HTTPResponse(), req);
-				String str = "";
-				log.debug("Start Decoding message");
-				WSFrame frame = WSFrame.getPing();
-				// sending ping frame 
-//				bufOut.write(new String("ZIG HILE\r\n").getBytes());
+				log.debug("Start WebSocket decoding message");
+				
+				WSFrame frame = new WSFrame();
+				byte[] buf;
+				int[] intBuf;
+				
 				while (true) {
-					while (bufIn.available() > 0) {
-						System.out.println( Integer.toHexString(bufIn.read()));  
+					 if (bufIn.available() > 0) {
+						buf = new byte[bufIn.available()];
+						intBuf = new int[bufIn.available()];
+						
+						bufIn.readNBytes(buf, 0, bufIn.available());
+											
+						frame = new WSFrame(buf);
+						if(frame.isColseFrame()) {
+							log.debug("Close WebSocket frame");
+							break;
+						}
+						frame.getUnMasked();
+						
+						bufOut.write(WSFrame.getBinary(frame.getUnMasked()).getBytesOutput());
+						bufOut.flush();
+						
 					}
 				}
 			}
