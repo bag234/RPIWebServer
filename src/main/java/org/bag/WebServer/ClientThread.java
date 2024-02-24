@@ -21,6 +21,8 @@ import org.bag.WebServer.WebSocket.WSFrame;
 
 public class ClientThread extends Thread {
 
+	static long idThread = 0;
+	
 	BufferedInputStream bufIn;
 	
 	BufferedOutputStream bufOut;
@@ -33,25 +35,28 @@ public class ClientThread extends Thread {
 	
 	Map<String, IResponse> WSpaths;
 	
+	
+	
 	public String decoding() throws IOException {
 		String str = "";
-		log.debug("Start Decoding message");
+		log.debug(idThread + "| Start Decoding message");
 		while (bufIn.available() > 0) {
 			str += (char) bufIn.read();
 		}
-		log.debug("End Decoding message");
+		log.debug(idThread + "| End Decoding message");
 		return str;
 	}
 	
 	public ClientThread(Socket sock, Map<String, IResponse> paths, Map<String, IResponse> WSpaths) {
+		idThread++;
 		this.paths = paths;
 		this.WSpaths = WSpaths;
-		log.info("START SOCKET LISSEN: " + sock);
+		log.info(idThread + "| START SOCKET LISSEN: " + sock);
 		try {
 			bufIn = new BufferedInputStream(sock.getInputStream());
 			bufOut = new BufferedOutputStream(sock.getOutputStream());
 		} catch (IOException e) {
-			log.error("Error get stream's");
+			log.error(idThread + "| Error get stream's");
 			log.error(e);
 		}
 		
@@ -66,7 +71,7 @@ public class ClientThread extends Thread {
 				if(res != null) {
 					res.sendResponse(bufOut, new HTTPResponse(), req);
 					IWebSocketMethod wsmes = (IWebSocketMethod) res;
-					log.debug("Start WebSocket decoding message");
+					log.debug(idThread + "| Start WebSocket decoding message");
 					wsmes.onOpen(bufOut);
 					
 					WSFrame frame = new WSFrame();
@@ -81,7 +86,7 @@ public class ClientThread extends Thread {
 							frame = new WSFrame(buf);
 							if(frame.isColseFrame()) {
 								wsmes.onClose(bufOut);
-								log.debug("Close WebSocket frame");
+								log.debug(idThread + "| Close WebSocket frame");
 								break;
 							}
 							if(frame.isPingFrame()) {
@@ -91,7 +96,7 @@ public class ClientThread extends Thread {
 								continue;
 							}
 							if(frame.isPongFrame()) {
-								log.debug("Client send pong frame");
+								log.debug(idThread + "| Client send pong frame");
 							}
 							
 							wsmes.onMessage(frame, bufOut);
@@ -119,10 +124,10 @@ public class ClientThread extends Thread {
 			bufOut.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error(e);
+			log.error(idThread + "| Error", e);
 			
 		}
-		log.info("END SOCKET LISSEN");
+		log.info(idThread + "| END SOCKET LISSEN");
 		super.run();
 	}
 }
