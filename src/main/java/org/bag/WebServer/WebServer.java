@@ -12,6 +12,7 @@ import org.bag.RPIControl.RPIListPin;
 import org.bag.RPIControl.RPIResponse;
 import org.bag.WebServer.Response.IResponse;
 import org.bag.WebServer.Response.Response.FileSimpleResponse;
+import org.bag.WebServer.WebSocket.SimpleWebSocket;
 
 public class WebServer {
 
@@ -23,6 +24,8 @@ public class WebServer {
 	
 	Map<String, IResponse> paths;
 	
+	Map<String, IResponse> WSpaths;
+	
 	public void initPath() {
 		
 		log.debug("Initialization paths");
@@ -33,17 +36,20 @@ public class WebServer {
 //		paths.put("/gpio/rel1", new RPIResponse(14, "rel1", pig));
 //		paths.put("/gpio/rel2", new RPIResponse(15, "rel2", pig));
 //		paths.put("/gpio/rel3", new RPIResponse(18, "rel3", pig));
+		
+		WSpaths.put("/ws", new SimpleWebSocket());
 	}
 	
 	public WebServer(int port) {
 		log.info("Init server");
 		paths = new HashMap<String, IResponse>();
+		WSpaths = new HashMap<String, IResponse>();
 		initPath();
 		try {
 			ServerSocket servSock = new ServerSocket(port);
 			while(servSock.isBound()) {
 				Socket sock = servSock.accept();
-				new Thread(new ClientThread(sock, paths)).run();
+				new Thread(new ClientThread(sock, paths, WSpaths)).run();
 			}
 		} catch (IOException e) {
 			log.fatal("FATAL ERROR");
