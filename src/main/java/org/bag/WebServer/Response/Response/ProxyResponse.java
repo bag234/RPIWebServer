@@ -1,37 +1,38 @@
 package org.bag.WebServer.Response.Response;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 
+import org.bag.WebServer.Interfaces.IEndPoint;
 import org.bag.WebServer.Reqwest.HTTPReqwest;
+import org.bag.WebServer.Response.ContetTypes;
 import org.bag.WebServer.Response.HTTPResponse;
 import org.bag.WebServer.Response.IResponse;
-import org.bag.WebServer.Storage.FileStorage;
+import org.bag.WebServer.Response.StatusCode;
 
-public class FileSimpleResponse implements IResponse {
+public class ProxyResponse implements IResponse{
+
+	IEndPoint end;
 	
-	final FileStorage storage = new FileStorage();
-	
-	File file;
-	
-	public FileSimpleResponse(String name) {
-		file = storage.getFile(name);
+	public ProxyResponse(IEndPoint end) {
+		this.end = end;
 	}
-
+	
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut) throws IOException {
-		HTTPResponse.New().sendFileRespons(bufOut, file);		
+		new HTTPResponse(StatusCode.ERROR, ContetTypes.PLAIN).getSimpelResponse(bufOut, "Error method`s call back!\n");
+		
 	}
-	
+
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res) throws IOException {
-		HTTPResponse.New().sendFileRespons(bufOut, file);		
+		sendResponse(bufOut);
 	}
 
 	@Override
 	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res, HTTPReqwest req) throws IOException {
-		HTTPResponse.New().sendFileRespons(bufOut, file);
+		end.doit(req).getResponse(bufOut);
+		
 	}
-	
+
 }

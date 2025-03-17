@@ -12,51 +12,82 @@ import java.util.Base64;
 import org.apache.log4j.Logger;
 import org.bag.WebServer.Reqwest.HTTPReqwest;
 import org.bag.WebServer.Storage.FileStorage;
-import org.bag.WebServer.WebSocket.WSFrame;
 
 public class HTTPResponse {
 
+	final static Logger log = Logger.getLogger(HTTPResponse.class);
 	
+	final String nameLine = "Server: %s";
+	
+	static String name = "RPI_LITE";
+	
+	Object body = null;
+		
 	StatusCode code = StatusCode.OK;
 	
 	ContetTypes type = ContetTypes.HTML;
 	
-	final String name = "Server: BAG-RPI LITE BETA";
-	
-	Logger log = Logger.getLogger(getClass());
-	
 	static MessageDigest md;
+	
+	public static void setName(String name) {
+		HTTPResponse.name = name;
+	}
 	
 	public HTTPResponse(StatusCode code, ContetTypes type) {
 		this.code = code;
 		this.type = type;
 		try {
 			md = MessageDigest.getInstance("SHA-1");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (NoSuchAlgorithmException e) {}
 	}
 	
-	public HTTPResponse() {
+	public HTTPResponse setCode(StatusCode code) {
+		this.code = code;
+		return this;
+	}
+	
+	public HTTPResponse setType(ContetTypes type) {
+		this.type = type;
+		return this;
+	}
+	
+	public HTTPResponse setBody(Object body) {
+		this.body = body;
+		return this;
+	}
+	
+	public static HTTPResponse New() {
+		return new HTTPResponse();
+	}
+	
+	protected HTTPResponse() {
 	}
 	
 	private String getHead() {
 		return "HTTP/1.0 " + code.getMessage() +
-				"\n " + name + 
+				"\n " + String.format(nameLine, name) + 
 				"\n Content-Type: " + type + "\n\n";
 	}
 	
 	private String getAnswerWebSocket(String str) {
 		String Sec = getCode(str);
 		return "HTTP/1.1 " + code.getMessage() +
-				"\r\n " + name + 
+				"\r\n " + String.format(nameLine, name) + 
 				"\r\nUpgrade: websocket" + 
 				"\r\nConnection: upgrade" + 
-//				"\r\n WebSocket-Origin: http://localhost:9099" + 
-//				"\r\n WebSocket-Location: ws://localhost:9099/ws" + 
 				"\r\nSec-WebSocket-Accept: " + Sec +
 				"\r\n\r\n";
+	}
+	
+	public void getResponse(BufferedOutputStream bufOut) throws IOException {
+		bufOut.write(getHead().getBytes());
+		if(body != null) {
+			if(body instanceof String)
+				bufOut.write(((String) body).getBytes());
+			else
+				bufOut.write(body.toString().getBytes());
+		}
+		bufOut.flush();
 	}
 	
 	public void getSimpelResponse(BufferedOutputStream bufOut, String message) throws IOException {
@@ -72,6 +103,7 @@ public class HTTPResponse {
 			code = StatusCode.ERROR;
 		type = FileStorage.getTypesFile(file);
 		bufOut.write(getHead().getBytes());
+		@SuppressWarnings("resource")
 		InputStream inF = new FileInputStream(file);
 		bufOut.write(inF.readAllBytes());
 		bufOut.flush();

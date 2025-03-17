@@ -6,26 +6,43 @@ import org.bag.WebServer.Response.ContetTypes;
 
 public class FileStorage {
 
-	final static File mFile = new File("WebServer/");
+	private static File mFile = new File("./WebServer/");
 	
-	public FileStorage() {
+	final static private File static_dir = new File(
+				(FileStorage.class.getResource("/static")).getFile()
+			);
+	
+	public static void setmFile(String file) {
+		FileStorage.mFile = new File(file);
 	}
 	
-	public static boolean isFind(String path) {
+	public FileStorage() {
+		if(!mFile.exists())
+			mFile.mkdir();
+		
+	}
+	
+	public static boolean isStaticDir(String path) {
+		return new File(static_dir.getAbsolutePath() + path).isFile();
+	}
+	
+	public static boolean isDynamicDir(String path) {
 		return new File(mFile.getAbsolutePath() + path).isFile();
 	}
 	
 	public File getFile(String path) {
-		if(isFind(path))
+		if(isStaticDir(path))
+			return new File(static_dir.getAbsolutePath() + path);
+		if(isDynamicDir(path))
 			return new File(mFile.getAbsolutePath() + path);
 		
-		return new File(mFile.getAbsolutePath() + "/NotFile.html");
+		return new File(static_dir.getAbsolutePath() + "/NotFile.html");
 	}
 	
 	public static ContetTypes getTypesFile(File file) {
 		if (!file.isFile())
 			return null;
-//		String[] p = file.getName().split("\\.");
+		
 		switch (file.getName().split("\\.")[1]) {
 		case "html":
 			return ContetTypes.HTML;

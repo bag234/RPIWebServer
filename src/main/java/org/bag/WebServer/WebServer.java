@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.bag.RPIControl.PigFactory;
-import org.bag.RPIControl.RPIListPin;
-import org.bag.RPIControl.RPIResponse;
 import org.bag.WebServer.Response.IResponse;
 import org.bag.WebServer.Response.Response.FileSimpleResponse;
 import org.bag.WebServer.WebSocket.SimpleWebSocket;
@@ -18,13 +15,29 @@ public class WebServer {
 
 	final Logger log = Logger.getLogger(this.getClass());
 	
-	int port;
-	
-//	PigFactory pig = new PigFactory();
+	int port = 9099; 
 	
 	Map<String, IResponse> paths;
 	
 	Map<String, IResponse> WSpaths;
+	
+//	PigFactory pig = new PigFactory();
+	
+	public WebServer addPath(String path, IResponse response) {
+		paths.put(path, response);
+		return this;
+	}
+	
+	public WebServer addWebSocket(String path, IResponse response) {
+		WSpaths.put(path, response);
+		return this;
+	}
+
+	public WebServer setPort(int port) {
+		this.port = port;
+		return this;
+	}
+
 	
 	public void initPath() {
 		
@@ -39,14 +52,16 @@ public class WebServer {
 		
 		WSpaths.put("/ws", new SimpleWebSocket());
 	}
-	
-	public WebServer(int port) {
-		log.info("Init server");
+
+	public WebServer() {
 		paths = new HashMap<String, IResponse>();
 		WSpaths = new HashMap<String, IResponse>();
-		initPath();
-		try {
-			ServerSocket servSock = new ServerSocket(port);
+	}
+	
+	public void run() {
+		
+		
+		try (ServerSocket servSock = new ServerSocket(port)) {
 			while(servSock.isBound()) {
 				Socket sock = servSock.accept();
 				new Thread(new ClientThread(sock, paths, WSpaths)).start();
@@ -55,7 +70,10 @@ public class WebServer {
 			log.fatal("FATAL ERROR");
 			log.fatal(e);
 		}
-		
+	}
+
+	private void printLogHead() {
+		log.info("SERVER START WHTIS PORT: " + port);
 	}
 	
 }

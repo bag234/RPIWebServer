@@ -11,8 +11,6 @@ public interface IResponse {
 	
 	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res) throws IOException ;
 	
-	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res, HTTPReqwest req) throws IOException ;
-	
-	//HTTPResponse res
+	public void sendResponse(BufferedOutputStream bufOut, HTTPResponse res, HTTPReqwest req) throws IOException;
 	
 }

@@ -35,8 +35,6 @@ public class ClientThread extends Thread {
 	
 	Map<String, IResponse> WSpaths;
 	
-	
-	
 	public String decoding() throws IOException {
 		String str = "";
 		log.debug(idThread + "| Start Decoding message");
@@ -65,11 +63,13 @@ public class ClientThread extends Thread {
 	@Override
 	public void run() {
 		try {
+			
 			HTTPReqwest req = new HTTPReqwest(decoding());
+			
 			if(req.isWS()) {
 				IResponse res = WSpaths.get(req.getPath().toLowerCase());
 				if(res != null) {
-					res.sendResponse(bufOut, new HTTPResponse(), req);
+					res.sendResponse(bufOut, HTTPResponse.New(), req);
 					IWebSocketMethod wsmes = (IWebSocketMethod) res;
 					log.debug(idThread + "| Start WebSocket decoding message");
 					wsmes.onOpen(bufOut);
@@ -104,29 +104,31 @@ public class ClientThread extends Thread {
 					}
 				}
 				else {
-					new FileSimpleResponse("/error").sendResponse(bufOut, new HTTPResponse(), req);
+					new FileSimpleResponse("/error").sendResponse(bufOut, HTTPResponse.New(), req);
 				}
 			}
 			else
 			if(req.isHTTP()) {
 				if (req.isRFile())
-					new HTTPResponse().sendFileRespons(bufOut, storage.getFile(req.getPath()));
+					HTTPResponse.New().sendFileRespons(bufOut, storage.getFile(req.getPath()));
 				else {
 //					IResponse res  = paths.get(req.getPath().toLowerCase());
 //					res.sendResponse(bufOut);
 					paths.getOrDefault(req.getPath().toLowerCase(), new FileSimpleResponse("/error"))
-						.sendResponse(bufOut, new HTTPResponse(), req);
+						.sendResponse(bufOut, HTTPResponse.New(), req);
 				}
-//					new HTTPResponse().getSimpelResponse(bufOut, "<h1> INDEX PAGE SIMPLE ANSWER </h1>\n");
 			}
+			
 			bufOut.flush();
 			bufIn.close();
 			bufOut.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(idThread + "| Error", e);
 			
-		}
+		} 
+		
 		log.info(idThread + "| END SOCKET LISSEN");
 		super.run();
 	}
