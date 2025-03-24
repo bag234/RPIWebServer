@@ -1,63 +1,58 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.bag</groupId>
-  <artifactId>RPIWebServer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mrbag</groupId>
+    <artifactId>RPIWebServer</artifactId>
+    <version>0.1.2-BETA</version>
+    <dependencies>
 
-	<dependency>
-  		<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.17</version>
-	</dependency>
-<!-- https://mvnrepository.com/artifact/uk.pigpioj/pigpioj-java -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 <dependency>
-    <groupId>uk.pigpioj</groupId>
-    <artifactId>pigpioj-java</artifactId>
-    <version>2.6.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/junit/junit -->
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.13</version>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.12.1</version>
     <scope>test</scope>
 </dependency>
+        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10</version>
+        </dependency>
 
-<!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
-<dependency>
-    <groupId>org.reflections</groupId>
-    <artifactId>reflections</artifactId>
-    <version>0.10</version>
-</dependency>
-
-  </dependencies>
-<build>
-		<plugins>
+    </dependencies>
+    <build>
+        <plugins>
             <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-assembly-plugin</artifactId>
-    <executions>
-        <execution>
-            <phase>package</phase>
-            <goals>
-                <goal>single</goal>
-            </goals>
-            <configuration>
-                <archive>
-                <manifest>
-                    <mainClass>
-                        org.bag.WebServer.Index
-                    </mainClass>
-                </manifest>
-                </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-		</plugins>
-       </build>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>
+                                        org.mrbag.WebServer.Index
+                                    </mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

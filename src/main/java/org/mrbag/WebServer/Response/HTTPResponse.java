@@ -1,4 +1,4 @@
-package org.bag.WebServer.Response;
+package org.mrbag.WebServer.Response;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -10,8 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import org.apache.log4j.Logger;
-import org.bag.WebServer.Reqwest.HTTPReqwest;
-import org.bag.WebServer.Storage.FileStorage;
+import org.mrbag.WebServer.Reqwest.HTTPReqwest;
+import org.mrbag.WebServer.Storage.FileStorage;
 
 public class HTTPResponse {
 
@@ -26,6 +26,8 @@ public class HTTPResponse {
 	StatusCode code = StatusCode.OK;
 	
 	ContetTypes type = ContetTypes.HTML;
+	
+	boolean isFile;
 	
 	static MessageDigest md;
 	
@@ -52,7 +54,18 @@ public class HTTPResponse {
 	}
 	
 	public HTTPResponse setBody(Object body) {
+		isFile = false;
 		this.body = body;
+		return this;
+	}
+	/**
+	 * Set to send file to response file
+	 * @param file - path to file response;
+	 * @return
+	 */
+	public HTTPResponse setBodyFile(String file) {
+		isFile = true;
+		this.body = file;
 		return this;
 	}
 	
@@ -80,6 +93,11 @@ public class HTTPResponse {
 	}
 	
 	public void getResponse(BufferedOutputStream bufOut) throws IOException {
+		if(isFile && body != null) {
+			sendFileRespons(bufOut, FileStorage.getFile((String)body));
+			return;
+		}
+			
 		bufOut.write(getHead().getBytes());
 		if(body != null) {
 			if(body instanceof String)
@@ -104,11 +122,14 @@ public class HTTPResponse {
 		type = FileStorage.getTypesFile(file);
 		bufOut.write(getHead().getBytes());
 		@SuppressWarnings("resource")
+		
 		InputStream inF = new FileInputStream(file);
 		bufOut.write(inF.readAllBytes());
+		
 		bufOut.flush();
 	}
 	
+	/* WEB SOCKET */
 	static public String getCode(String str) { 
 		String text = str + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 		byte[] buf = md.digest(text.getBytes());

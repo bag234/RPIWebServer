@@ -1,4 +1,4 @@
-package org.bag.WebServer.WebSocket;
+package org.mrbag.WebServer.WebSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;

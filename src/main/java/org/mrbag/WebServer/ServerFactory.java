@@ -1,4 +1,4 @@
-package org.bag.WebServer;
+package org.mrbag.WebServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,12 +7,17 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-
-import org.bag.WebServer.Annotation.WebServerConfigFile;
-import org.bag.WebServer.Response.HTTPResponse;
-import org.bag.WebServer.Storage.FileStorage;
+import org.mrbag.WebServer.Annotation.EndPoint;
+import org.mrbag.WebServer.Annotation.WSEndPoint;
+import org.mrbag.WebServer.Annotation.WebServerConfigFile;
+import org.mrbag.WebServer.Interfaces.IEndPoint;
+import org.mrbag.WebServer.Response.HTTPResponse;
+import org.mrbag.WebServer.Response.Response.WarpedResponse;
+import org.mrbag.WebServer.Storage.FileStorage;
+import org.mrbag.WebServer.WebSocket.AbstractWSEndPoint;
 
 public final class ServerFactory {
 
@@ -53,6 +58,39 @@ public final class ServerFactory {
 		return pars; 
 	}
 	
+	static private void configWebServerEndPoint(WebServer serv, Map<String, String> pars) {
+		Set<Class<?>> clazzs = ScanerAnnotation.scanAnnotation(EndPoint.class);
+		Set<IEndPoint> ends = ScanerAnnotation.initEnds(pars, clazzs);
+		clazzs = ScanerAnnotation.scanAnnotation(WSEndPoint.class);
+		Set<AbstractWSEndPoint> wsEnds = ScanerAnnotation.initWSEnds(pars, clazzs);
+		
+		String[] paths = null;
+		WarpedResponse wr = null;
+		
+		log.debug(String.format("Found IEndPoint implement`s: %d", ends.size()));
+		for(IEndPoint e: ends) {
+			paths = ScanerAnnotation.getPathsEnd(e.getClass());
+			if (paths != null) {
+				wr = new WarpedResponse(e);
+				for(String path: paths) {
+					log.debug(String.format("EndPoint mount on %s and class %s", path, e));
+					serv.addPath(path, wr);
+				}
+			}
+		}
+		
+		log.debug(String.format("Found WSEndPoint implement`s: %d", wsEnds.size()));
+		for(AbstractWSEndPoint e: wsEnds) {
+			paths = ScanerAnnotation.getPathsEnd(e.getClass());
+			if (paths != null) {
+				for(String path: paths) {
+					log.debug(String.format("WsEndPoint mount on %s and class %s", path, e));
+					serv.addWebSocket(path, e);
+				}
+			}
+		}
+	}
+	
 	static public WebServer runWebServer(Class<?> main_class) throws Exception {
 		Map<String, String> pars = loadConfig(main_class); 
 		if (pars == null)
@@ -66,6 +104,8 @@ public final class ServerFactory {
 			HTTPResponse.setName(pars.get("name"));
 		if(pars.containsKey("dir"))
 			FileStorage.setmFile(pars.get("dir"));
+	
+		configWebServerEndPoint(serv, pars);
 		
 		return serv;
 	}

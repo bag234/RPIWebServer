@@ -1,6 +1,6 @@
-package org.bag.WebServer;
+package org.mrbag.WebServer;
 
-import org.bag.WebServer.Annotation.WebServerConfigFile;
+import org.mrbag.WebServer.Annotation.WebServerConfigFile;
 
 @WebServerConfigFile
 public class Index {

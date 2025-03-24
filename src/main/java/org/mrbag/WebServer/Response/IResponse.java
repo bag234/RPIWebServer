@@ -1,9 +1,9 @@
-package org.bag.WebServer.Response;
+package org.mrbag.WebServer.Response;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import org.bag.WebServer.Reqwest.HTTPReqwest;
+import org.mrbag.WebServer.Reqwest.HTTPReqwest;
 
 public interface IResponse {
 

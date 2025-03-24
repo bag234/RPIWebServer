@@ -1,4 +1,4 @@
-package org.bag.WebServer.Reqwest;
+package org.mrbag.WebServer.Reqwest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,5 +83,13 @@ public class HTTPReqwest {
 	public String getParametrs(String name) {
 		return parametrs.getOrDefault(name, "None");
 	}
+
+	@Override
+	public String toString() {
+		return "{path=" + path + ", method=" + method + ", parametrs=" + parametrs + ", isHTTP=" + isHTTP
+				+ ", isRFile=" + isRFile + ", isWS=" + isWS + ", log=" + log + "}";
+	}
+	
+	
 	
 }

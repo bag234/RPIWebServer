@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)
-public @interface WebServerConfigFile {
+public @interface WSEndPoint {
 
-	String value() default "/serv.conf";
+	String[] path();
 	
 }

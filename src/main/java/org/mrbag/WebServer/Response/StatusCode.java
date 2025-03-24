@@ -1,4 +1,4 @@
-package org.bag.WebServer.Response;
+package org.mrbag.WebServer.Response;
 
 public enum StatusCode {
 

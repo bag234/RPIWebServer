@@ -1,4 +1,4 @@
-package org.bag.WebServer.Annotation;
+package org.mrbag.WebServer.Annotation;
 
 import static java.lang.annotation.ElementType.TYPE;
 
@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.bag.WebServer.Reqwest.Method;
+import org.mrbag.WebServer.Reqwest.Method;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)

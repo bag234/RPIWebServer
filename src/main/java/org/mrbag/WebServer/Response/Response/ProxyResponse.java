@@ -1,14 +1,14 @@
-package org.bag.WebServer.Response.Response;
+package org.mrbag.WebServer.Response.Response;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import org.bag.WebServer.Interfaces.IEndPoint;
-import org.bag.WebServer.Reqwest.HTTPReqwest;
-import org.bag.WebServer.Response.ContetTypes;
-import org.bag.WebServer.Response.HTTPResponse;
-import org.bag.WebServer.Response.IResponse;
-import org.bag.WebServer.Response.StatusCode;
+import org.mrbag.WebServer.Interfaces.IEndPoint;
+import org.mrbag.WebServer.Reqwest.HTTPReqwest;
+import org.mrbag.WebServer.Response.ContetTypes;
+import org.mrbag.WebServer.Response.HTTPResponse;
+import org.mrbag.WebServer.Response.IResponse;
+import org.mrbag.WebServer.Response.StatusCode;
 
 public class ProxyResponse implements IResponse{
 

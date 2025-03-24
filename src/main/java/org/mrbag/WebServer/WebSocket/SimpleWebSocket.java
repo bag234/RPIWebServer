@@ -1,12 +1,12 @@
-package org.bag.WebServer.WebSocket;
+package org.mrbag.WebServer.WebSocket;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.bag.WebServer.Reqwest.HTTPReqwest;
-import org.bag.WebServer.Response.HTTPResponse;
-import org.bag.WebServer.Response.IResponse;
+import org.mrbag.WebServer.Reqwest.HTTPReqwest;
+import org.mrbag.WebServer.Response.HTTPResponse;
+import org.mrbag.WebServer.Response.IResponse;
 
 public class SimpleWebSocket implements IResponse, IWebSocketMethod {
 
@@ -55,7 +55,6 @@ public class SimpleWebSocket implements IResponse, IWebSocketMethod {
 
 	@Override
 	public void onPing(OutputStream out) throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
 }

@@ -1,4 +1,4 @@
-package org.bag.WebServer.Reqwest;
+package org.mrbag.WebServer.Reqwest;
 
 public enum Method {
 

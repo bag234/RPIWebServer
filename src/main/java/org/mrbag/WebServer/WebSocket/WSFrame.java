@@ -1,4 +1,4 @@
-package org.bag.WebServer.WebSocket;
+package org.mrbag.WebServer.WebSocket;
 
 enum OpCODE {
 	
@@ -44,9 +44,6 @@ public class WSFrame {
 	
 	
 	public WSFrame(byte[] message) {
-//		if (message.length < 4) {
-//			throw new Exception("SO Litle");
-//		}
 		// load First Bytes
 		isFine = ((message[0] & 128) != 0);
 		RSV1 = ((message[0] & 64) != 0);

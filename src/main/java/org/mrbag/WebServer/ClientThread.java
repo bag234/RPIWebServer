@@ -1,4 +1,4 @@
-package org.bag.WebServer;
+package org.mrbag.WebServer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,16 +10,16 @@ import java.nio.IntBuffer;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.bag.WebServer.Reqwest.HTTPReqwest;
-import org.bag.WebServer.Response.HTTPResponse;
-import org.bag.WebServer.Response.IResponse;
-import org.bag.WebServer.Response.Response.FileSimpleResponse;
-import org.bag.WebServer.Storage.FileStorage;
-import org.bag.WebServer.WebSocket.IWebSocketMethod;
-import org.bag.WebServer.WebSocket.SimpleWebSocket;
-import org.bag.WebServer.WebSocket.WSFrame;
+import org.mrbag.WebServer.Reqwest.HTTPReqwest;
+import org.mrbag.WebServer.Response.HTTPResponse;
+import org.mrbag.WebServer.Response.IResponse;
+import org.mrbag.WebServer.Response.Response.FileSimpleResponse;
+import org.mrbag.WebServer.Storage.FileStorage;
+import org.mrbag.WebServer.WebSocket.IWebSocketMethod;
+import org.mrbag.WebServer.WebSocket.SimpleWebSocket;
+import org.mrbag.WebServer.WebSocket.WSFrame;
 
-public class ClientThread extends Thread {
+class ClientThread extends Thread {
 
 	static long idThread = 0;
 	

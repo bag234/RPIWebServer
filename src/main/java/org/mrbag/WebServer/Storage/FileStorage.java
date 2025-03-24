@@ -1,8 +1,8 @@
-package org.bag.WebServer.Storage;
+package org.mrbag.WebServer.Storage;
 
 import java.io.File;
 
-import org.bag.WebServer.Response.ContetTypes;
+import org.mrbag.WebServer.Response.ContetTypes;
 
 public class FileStorage {
 
@@ -30,7 +30,7 @@ public class FileStorage {
 		return new File(mFile.getAbsolutePath() + path).isFile();
 	}
 	
-	public File getFile(String path) {
+	public static File getFile(String path) {
 		if(isStaticDir(path))
 			return new File(static_dir.getAbsolutePath() + path);
 		if(isDynamicDir(path))
