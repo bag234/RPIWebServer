@@ -16,6 +16,10 @@ public class FileStorage {
 		FileStorage.mFile = new File(file);
 	}
 	
+	public static File getmFile() {
+		return mFile;
+	}
+	
 	public FileStorage() {
 		if(!mFile.exists())
 			mFile.mkdir();
